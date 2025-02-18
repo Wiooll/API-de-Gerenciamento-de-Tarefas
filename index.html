@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Tarefas</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .container { max-width: 500px; margin: auto; }
+        input, button { margin: 5px; padding: 8px; }
+        .task { border: 1px solid #ddd; padding: 10px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h2>Lista de Tarefas</h2>
+    <div class="container">
+        <input type="text" id="titulo" placeholder="Título da tarefa">
+        <input type="text" id="descricao" placeholder="Descrição">
+        <button onclick="adicionarTarefa()">Adicionar</button>
+        <div id="tarefas"></div>
+    </div>
+
+    <script>
+        const API_URL = "http://127.0.0.1:5000/tarefas";
+
+        function carregarTarefas() {
+            fetch(API_URL)
+                .then(res => res.json())
+                .then(tarefas => {
+                    let html = "";
+                    tarefas.forEach(t => {
+                        html += `<div class="task">
+                                    <strong>${t.titulo}</strong><br>
+                                    ${t.descricao}<br>
+                                    <input type="checkbox" ${t.concluida ? "checked" : ""} onclick="atualizarTarefa(${t.id}, ${!t.concluida})"> Concluída
+                                    <button onclick="deletarTarefa(${t.id})">🗑 Excluir</button>
+                                 </div>`;
+                    });
+                    document.getElementById("tarefas").innerHTML = html;
+                });
+        }
+
+        function adicionarTarefa() {
+            const titulo = document.getElementById("titulo").value;
+            const descricao = document.getElementById("descricao").value;
+            fetch(API_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ titulo, descricao })
+            }).then(() => { carregarTarefas(); });
+        }
+
+        function atualizarTarefa(id, concluida) {
+            fetch(`${API_URL}/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ concluida })
+            }).then(() => { carregarTarefas(); });
+        }
+
+        function deletarTarefa(id) {
+            fetch(`${API_URL}/${id}`, { method: "DELETE" })
+                .then(() => { carregarTarefas(); });
+        }
+
+        carregarTarefas();
+    </script>
+</body>
+</html>
