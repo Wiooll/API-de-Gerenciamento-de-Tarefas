@@ -21,11 +21,12 @@
     </div>
 
     <script>
-        const API_URL = "http://127.0.0.1:5000/tarefas";
+        const API_URL = "http://127.0.0.1:8000/tarefas";
+
 
         function carregarTarefas() {
-            fetch(API_URL)
-                .then(res => res.json())
+            fetch(API_URL, { mode: "no-cors" })
+            .then(res => res.json())
                 .then(tarefas => {
                     let html = "";
                     tarefas.forEach(t => {
