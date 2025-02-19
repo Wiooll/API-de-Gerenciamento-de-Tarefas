@@ -21,7 +21,7 @@ with app.app_context():
     db.create_all()
 
 # Rota para criar uma nova tarefa (POST)
-@app.route('/tarefas', methods=['POST'])
+@app.route('/instance/tarefas', methods=['POST'])
 def criar_tarefa():
     dados = request.get_json()
     nova_tarefa = Tarefa(titulo=dados['titulo'], descricao=dados.get('descricao', ''), concluida=False)
@@ -30,13 +30,13 @@ def criar_tarefa():
     return jsonify({'mensagem': 'Tarefa criada com sucesso!'}), 201
 
 # Rota para listar todas as tarefas (GET)
-@app.route('/tarefas', methods=['GET'])
+@app.route('/instance/tarefas', methods=['GET'])
 def listar_tarefas():
     tarefas = Tarefa.query.all()
     return jsonify([{'id': t.id, 'titulo': t.titulo, 'descricao': t.descricao, 'concluida': t.concluida} for t in tarefas])
 
 # Rota para atualizar uma tarefa (PUT)
-@app.route('/tarefas/<int:id>', methods=['PUT'])
+@app.route('/instance/tarefas/<int:id>', methods=['PUT'])
 def atualizar_tarefa(id):
     tarefa = Tarefa.query.get_or_404(id)
     dados = request.get_json()
@@ -47,7 +47,7 @@ def atualizar_tarefa(id):
     return jsonify({'mensagem': 'Tarefa atualizada com sucesso!'})
 
 # Rota para deletar uma tarefa (DELETE)
-@app.route('/tarefas/<int:id>', methods=['DELETE'])
+@app.route('/instance/tarefas/<int:id>', methods=['DELETE'])
 def deletar_tarefa(id):
     tarefa = Tarefa.query.get_or_404(id)
     db.session.delete(tarefa)
