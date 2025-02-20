@@ -12,14 +12,15 @@
     </style>
 </head>
 <body>
-    <h2>Lista de Tarefas</h2>
+    <fieldset>
+        <legend>Lista de Tarefas</legend>
     <div class="container">
         <input type="text" id="titulo" placeholder="Título da tarefa">
         <input type="text" id="descricao" placeholder="Descrição">
         <button onclick="adicionarTarefa()">Adicionar</button>
         <div id="tarefas"></div>
     </div>
-
+    </fieldset>
     <script>
         const API_URL = "http://127.0.0.1:8000/tarefas";
 
